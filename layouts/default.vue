@@ -54,7 +54,7 @@ export default {
   middleware: ['authenticated'],
 
   computed: {
-    ...mapState(['managementReady', 'clusterReady', 'virtualClusterReady']),
+    ...mapState(['managementReady', 'clusterReady']),
     ...mapGetters(['productId', 'clusterId', 'namespaceMode', 'isExplorer', 'currentProduct']),
     ...mapGetters({ locale: 'i18n/selectedLocaleLabel' }),
     ...mapGetters('type-map', ['activeProducts']),
@@ -188,13 +188,6 @@ export default {
       }
     },
 
-    virtualClusterReady(a, b) {
-      if ( !isEqual(a, b) ) {
-        // Immediately update because you'll see it come in later
-        this.getGroups();
-      }
-    },
-
     product(a, b) {
       if ( !isEqual(a, b) ) {
         // Immediately update because you'll see it come in later
@@ -266,13 +259,13 @@ export default {
     },
 
     getGroups() {
-      if ( !this.clusterReady && !this.virtualClusterReady ) {
+      if ( !this.clusterReady ) {
         clear(this.groups);
 
         return;
       }
 
-      const clusterId = this.$store.getters['clusterId'] || this.$store.getters['virtualClusterId'];
+      const clusterId = this.$store.getters['clusterId'];
       const currentProduct = this.$store.getters['productId'];
       const currentType = this.$route.params.resource || '';
       let namespaces = null;
@@ -484,7 +477,7 @@ export default {
 
     <div v-if="managementReady" class="dashboard-content">
       <Header />
-      <nav v-if="clusterReady || virtualClusterReady" class="side-nav">
+      <nav v-if="clusterReady" class="side-nav">
         <div class="nav">
           <template v-for="(g, idx) in groups">
             <Group
@@ -514,7 +507,7 @@ export default {
           {{ displayVersion }}
         </div>
       </nav>
-      <main v-if="clusterReady || virtualClusterReady">
+      <main v-if="clusterReady">
         <nuxt class="outlet" />
         <ActionMenu />
         <PromptRemove />

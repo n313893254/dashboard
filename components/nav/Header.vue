@@ -182,9 +182,9 @@ export default {
         <BrandImage class="side-menu-logo-img" file-name="rancher-logo.svg" />
       </div>
     </div>
-    
-    <TopLevelMenu 
-      v-if="!isVirtualCluster"
+
+    <TopLevelMenu
+      v-if="isMultiCluster || !isVirtualCluster"
     />
     <div v-if="!simple" class="top">
       <NamespaceFilter v-if="clusterReady && currentProduct && (currentProduct.showNamespaceFilter || isExplorer)" />
